@@ -1,4 +1,3 @@
-
  
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -91,6 +90,7 @@ class HomePanel implements  ActionListener{
         //Create and set up the content pane.
         HomePanel demo = new HomePanel();
         frame.setContentPane(demo.createContentPane());
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);  
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(250, 190);
