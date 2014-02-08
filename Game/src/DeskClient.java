@@ -52,8 +52,14 @@ public class DeskClient {
             	{
             		loginCalled.setText("Attempting Login....");
             		String username = user.getText();
-            		String password = pass.getText();
-            		
+            		char [] password = pass.getPassword();
+            		int ret = server.confirmCredentials(username,password);
+            		if(ret == 200)
+            		{
+            			HomePanel home = new HomePanel();
+            			home.createContentPane();
+            			frame.setVisible(false);
+            		}
             	}
             }
         	
