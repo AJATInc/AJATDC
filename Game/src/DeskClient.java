@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 public class DeskClient {
     /**
@@ -16,6 +18,8 @@ public class DeskClient {
     static JLabel passLabel = new JLabel("Password: ");
     static JButton login = new JButton("Login");
     static JLabel loginCalled = new JLabel(""); 
+    static ServerConnector server = new ServerConnector();
+    
     private static  void createAndShowGUI() {
         //Create and set up the window.
         frame.setLayout(null);
@@ -50,17 +54,27 @@ public class DeskClient {
             	Object source = e.getSource();
             	if(source == login)
             	{
+            		if(server.initConnect())
+            		{
             		loginCalled.setText("Attempting Login....");
             		String username = user.getText();
-            		char [] password = pass.getPassword();
-            		//int ret = server.confirmCredentials(username,password);
-            		int ret =200;
+            		char [] passwd = pass.getPassword();
+            		String password =String.valueOf(passwd);
+            		try{
+            		int ret = server.confirmCredentials(username,password);
+            		ret =200;
             		if(ret == 200)
             		{
             			HomePanel home = new HomePanel();
             			home.createContentPane();
             			frame.setVisible(false);
             			home.createAndShowGUI();
+            		}
+            		}
+            		catch(IOException ioe)
+            		{
+            			
+            		}
             		}
             	}
             }
