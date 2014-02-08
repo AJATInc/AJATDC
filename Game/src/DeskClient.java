@@ -45,7 +45,7 @@ public class DeskClient {
         login.setSize(100,17);
         login.setLocation(100,225);
         login.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent e)
+        	public  void actionPerformed(ActionEvent e)
             {
             	Object source = e.getSource();
             	if(source == login)
@@ -53,12 +53,14 @@ public class DeskClient {
             		loginCalled.setText("Attempting Login....");
             		String username = user.getText();
             		char [] password = pass.getPassword();
-            		int ret = server.confirmCredentials(username,password);
+            		//int ret = server.confirmCredentials(username,password);
+            		int ret =200;
             		if(ret == 200)
             		{
             			HomePanel home = new HomePanel();
             			home.createContentPane();
             			frame.setVisible(false);
+            			home.createAndShowGUI();
             		}
             	}
             }
