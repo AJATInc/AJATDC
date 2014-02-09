@@ -4,12 +4,20 @@
  * and open the template in the editor.
  */
 
-package src;
+package src;    
+
+/**
+ *
+ * @author mccabet
+ */
 
 import java.awt.ActiveEvent;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -17,67 +25,82 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 
-public class NewGamePanel {
-static JFrame frame = new JFrame();
-static JLabel title = new JLabel("Creating New Game...");
-static JLabel name = new JLabel("Game Name: ");
-static JLabel pin = new JLabel("Pin to Join Game: ");
-static JLabel numCap = new JLabel("Max Players: ");
-static JLabel numTeams = new JLabel("Number of Teams: ");
-static JLabel geoFence = new JLabel("Enable Geolocation: ");
-static JLabel mission = new JLabel("Enable Missions: ");
-static JLabel search = new JLabel("Location of Game:");
-static JLabel map = new JLabel();
+class GamePage implements  ActionListener{
+         
 
 
-static JTextField nameF = new JTextField(150);
-static JTextField pinF = new JTextField(25);
-static JComboBox numCapF = new JComboBox();
-static JComboBox numTeamsF = new JComboBox();
-static JCheckBox geoFenceF = new JCheckBox();
-static JCheckBox missionF = new JCheckBox();
-static JButton confirm = new JButton("Confirm");
-static JTextField locSearch = new JTextField(150);
-static JButton searchB = new JButton("Get Map");
-static JButton zoomIn = new JButton("+");
-static JButton zoomOut = new JButton("-");
-static JButton homeButton=new JButton("Home");
-static boolean locOn = false;
-static int zoomSet = 15;
-static BufferedImage mapImg = null;
-static String pinSave = "";
-static int maxSave;
-static int teamSave;
-static boolean geoSave;
-static boolean missSave;
-static String mapURL;
-//static JPanel map = new JPanel("Select Game Range");
-public static void createAndShowGUI()
-{
-	String[] numPlayers = new String[100];
-	for(int i = 1; i<=100; i++)
-	{
-		numPlayers[i-1] = Integer.toString(i*50);
-	}
-	String[] numTeamsArr = new String[100];
-	for(int i =1; i<=100; i++)
-	{
-		numTeamsArr[i-1] = Integer.toString(i);
-	}
-            
+
+	static JButton homeButton,newMissionButton,playerMangButton,gameConfig;
+	static JPanel buttonPanelOne,mapPanel,buttonPanelTwo,spanel;
+        
+        static JLabel map;
+        static JFrame gamePageFrame = new JFrame("Home Page");
+        static BufferedImage mapImg = null;
+    private static JTextArea textArea;
+
+
+
+	public static JPanel createContentPane (){
+
+     
+        JPanel totalGUI = new JPanel();
+        totalGUI.setLayout(null);
+
+  
+      
+        
+        buttonPanelOne = new JPanel();
+        buttonPanelOne.setLayout(null);
+        buttonPanelOne.setLocation(0, 0);
+        buttonPanelOne.setSize(2000, 70);
+        totalGUI.add(buttonPanelOne);
+
+       
+        mapPanel  = new JPanel();
+        mapPanel.setLayout(null);
+        mapPanel.setLocation(500, 80);
+        mapPanel.setSize(600,400);
+        totalGUI.add(mapPanel);
+        
+        
+        JPanel spanel  = new JPanel();
+        JScrollPane userScroll = new JScrollPane( spanel );
+        userScroll.setLayout(null);
+        userScroll.setLocation(1300, 80);
+        userScroll.setSize(250,400);
+        totalGUI.add(userScroll);
+        
+        JLabel userList = new JLabel("Userlist:");
+        userList.setLocation(0, 0);
+        userList.setSize(50, 50);
+        userList.setHorizontalAlignment(0);
+        userScroll.add(userList);
+        
+          
+       
+
+
+        
+        
+        
+        buttonPanelTwo = new JPanel();
+        buttonPanelTwo.setLayout(null);
+        buttonPanelTwo.setLocation(0, 700);
+        buttonPanelTwo.setSize(2000, 500);
+        totalGUI.add(buttonPanelTwo);
+        
+        
+        
+
+        
+        
+        homeButton= new JButton("Home"); //Button Defininitions
         homeButton.setLocation(0, 0);
-        homeButton.setSize(200, 20);
+        homeButton.setSize(1600, 20);
+        buttonPanelOne.add(homeButton);
         homeButton.addActionListener(new ActionListener(){
         	public  void actionPerformed(ActionEvent e)
             {
@@ -86,159 +109,92 @@ public static void createAndShowGUI()
             	{
                     HomePanel home = new HomePanel();
             			home.createContentPane();
-            			frame.setVisible(false);
+            			gamePageFrame.setVisible(false);
             			home.createAndShowGUI();
                     
                     
                 }
             }
         });
-        frame.add(homeButton);
+        
+        
+        
+        
+        newMissionButton=new JButton("New Mission"); 
+        newMissionButton.setLocation(400, 0);
+        newMissionButton.setSize(800, 20);
+        buttonPanelTwo.add(newMissionButton);
+        
+        playerMangButton=new JButton("Player Managment"); 
+        playerMangButton.setLocation(400, 40);
+        playerMangButton.setSize(800, 20);
+        buttonPanelTwo.add(playerMangButton);
+        
+        gameConfig=new JButton("Game Configuration"); 
+        gameConfig.setLocation(400, 80);
+        gameConfig.setSize(800, 20);
+        buttonPanelTwo.add(gameConfig);
 
-	numCapF = new JComboBox(numPlayers);
-	numTeamsF = new JComboBox(numTeamsArr);
-	frame.setLayout(null);
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	frame.setSize(1000,700);
-	title.setSize(200,15);
-	name.setSize(200,15);
-	pin.setSize(200,15);
-	numCap.setSize(200,15);
-	numTeams.setSize(200,15);
-	geoFence.setSize(200,15);
-	mission.setSize(200,15);
-	search.setSize(200,15);
+       
 
-	title.setLocation(500,0);
-	title.setSize(200,15);
-	name.setLocation(25,100);
-	pin.setLocation(25,150);
-	numCap.setLocation(25,200);
-	numTeams.setLocation(25,250);
-	geoFence.setLocation(25,300);
-	mission.setLocation(25, 350);
-	search.setLocation(25,400);
-
-	nameF.setSize(150, 17);
-	nameF.setLocation(200,99);
-	numCapF.setSize(50,17);
-	numCapF.setLocation(200,199);
-	numTeamsF.setSize(50,17);
-	numTeamsF.setLocation(200,249);
-	pinF.setSize(150,17);
-	pinF.setLocation(200,149);
-	locSearch.setSize(150, 17);
-	locSearch.setLocation(200, 399);
-	searchB.setSize(100,20);
-	searchB.setLocation(355, 397);
-	searchB.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e)
-		{
-			map.setVisible(false);
-			frame.add(map);
-			frame.validate();
-			frame.repaint();
-			String url = "http://maps.googleapis.com/maps/api/staticmap?center=";
-			String charset = "UTF-8";
-			String param1 = locSearch.getText();
-			String param2 = "&&zoom="+zoomSet+"&&size=400x600&&sensor=false";
-			try{
-			mapURL = url+param1+param2;
-			URLConnection connection = new URL(mapURL).openConnection();
-			connection.setRequestProperty("Accept-Charset",charset);
-			InputStream ret = connection.getInputStream();
-			BufferedImage img = ImageIO.read(ret);
-			mapImg = img;
-			map = new JLabel(new ImageIcon(img));
-			map.setSize(400,600);
-			map.setLocation(550,50);
-			frame.add(map);
-			frame.validate();
-			frame.repaint();
-			}
-			catch(Exception ex)
+        String mapURL = "http://maps.googleapis.com/maps/api/staticmap?center=Boston&&size=600x400&&sensor=false";
+	String charset = "UTF-8";
+        try{
+        URLConnection connection = new URL(mapURL).openConnection();
+	connection.setRequestProperty("Accept-Charset",charset);
+	InputStream ret = connection.getInputStream();
+	BufferedImage img = ImageIO.read(ret);
+	mapImg = img;
+	map = new JLabel(new ImageIcon(img));
+	map.setSize(600,400);
+	map.setLocation(0,0);
+        mapPanel.add(map);
+        }
+            catch(IOException ex)
 			{
 				JLabel error = new JLabel("Exception thrown"+ ex.toString());
 				error.setSize(700,300);
 				error.setLocation(25,300);
-				frame.add(error);
-				frame.validate();
-				frame.repaint();
+				gamePageFrame.add(error);
+				gamePageFrame.validate();
+				gamePageFrame.repaint();
 			}
-
-		}
-	});
-	zoomIn.setSize(50,15);
-	zoomOut.setSize(50,15);
-	zoomIn.setLocation(200, 430);
-	zoomIn.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e)
-		{
-			zoomSet++;
-		}
-
-	});
-	zoomOut.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e)
-		{
-			zoomSet--;
-		}
-
-	});
-	zoomOut.setLocation(285,430);
-	geoFenceF.setSize(20, 15);
-	geoFenceF.setLocation(200,299);
-	geoFenceF.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e)
-		{
+        
 
 
-				locSearch.setVisible(!locOn);
-				search.setVisible(!locOn);
-				searchB.setVisible(!locOn);
-				zoomIn.setVisible(!locOn);
-				zoomOut.setVisible(!locOn);
-				frame.add(zoomIn);
-				frame.add(zoomOut);
-				frame.add(locSearch);
-				frame.add(search);
-				frame.add(searchB);
-				frame.validate();
-				frame.repaint();
-				locOn = !locOn;
+        
+        totalGUI.setOpaque(true);
+        return totalGUI;
+    }
 
 
-		}
-	});
-	missionF.setSize(20,15);
-	missionF.setLocation(200,349);
-	confirm.setSize(100,30);
-	confirm.setLocation(200, 625);
-	confirm.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e)
-		{
+	public void actionPerformed(ActionEvent e) {
+		
+       
+       
+        }
+    
 
-		}
-	});
-	frame.add(title);
-	frame.add(name);
-	frame.add(pin);
-	frame.add(numCap);
-	frame.add(numTeams);
-	frame.add(geoFence);
-	frame.add(mission);
-	frame.add(nameF);
-	frame.add(pinF);
-	frame.add(numCapF);
-	frame.add(numTeamsF);
-	frame.add(geoFenceF);
-	frame.add(missionF);
-	frame.add(confirm);
-	frame.setVisible(true);
-}
+
+
+
+     static void createAndShowGUI() {
+
+        gamePageFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);  
+
+        //Create and set up the content pane.
+        GamePage demo = new GamePage();
+        gamePageFrame.setContentPane(demo.createContentPane());
+
+        gamePageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gamePageFrame.setSize(1600, 1600);
+        gamePageFrame.setVisible(true);
+    }
 
 
 }
+
+
 /**
  *
  * @author mccabet
