@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
+import java.util.Random;
+
 
 
 
@@ -21,7 +23,7 @@ BufferedReader in;
 	public static boolean initConnect()
 	{
 		try{
-		URLConnection connection = new URL("http://localhost:80/post.php?value=65").openConnection();
+		URLConnection connection = new URL("http://25.194.87.222:80/post.php?value=65").openConnection();
 		connection.setDoOutput(true);
 		//connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 		connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -51,8 +53,12 @@ BufferedReader in;
 		return true;
 	}
 	public static boolean confirmCredentials(String uname, String pass) throws IOException
-	{
-		URLConnection connection = new URL("http://localhost:80/select.php?tbl=admins&&col=name&&whr1=name &&whr2="+pass).openConnection();
+	{	
+		if(uname==""||pass=="")
+		{
+			return false;
+		}
+		URLConnection connection = new URL("http://25.194.87.222:80/select.php?tbl=admins&&col=name&&whr1=name &&whr2="+pass).openConnection();
 		//connection.setDoOutput(true);
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 		connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -67,25 +73,32 @@ BufferedReader in;
 		{
 			holder1=br.readLine();
 			holder2+=holder1;
-		
+
 		}
-		
+
 		if(holder2.contains(uname))
 		{
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
-public static void newGame(String name, String pin,String adminID, int numP, int numT, boolean geoF, boolean miss, String mapURL,BufferedImage mapImg )
+public static void newGame(String name, String pin,int numP, int numT, boolean geoF, boolean miss, String mapURL,BufferedImage mapImg )
 {
+    
+    
 	try{
-	URLConnection connection = new URL("http://localhost:80/gameAdd?name="+name+"&&pin="+pin+"&&adminID="+adminID+"&&numP="+numP+"&&numT="+numT+"&&geoF="+geoF+"&&miss="+miss+"&&mapURL="+mapURL+"&&mapIm="+mapImg).openConnection();
+        double adminID;
+        double nameL=name.length();
+        adminID=(5*Math.random())*nameL;
+        System.out.println(adminID);
+	URLConnection connection = new URL("http://25.194.87.222:80/gameAdd?name="+name+"&&pin="+pin+"&&adminID="+adminID+"&&numP="+numP+"&&numT="+numT+"&&geoF="+geoF+"&&miss="+miss+"&&mapURL="+mapURL+"&&mapIm="+mapImg).openConnection();
 	connection.setDoOutput(true);
 	connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 	connection.setRequestProperty("Accept-Charset", "UTF-8");
+        
 	}
 	catch (Exception e)
 	{
@@ -97,7 +110,7 @@ public static void newGame(String name, String pin,String adminID, int numP, int
 public static void addUserToGame(String user, String userID, String gameName )
 {
 	try{
-		URLConnection connection = new URL("http://localhost:80/update.php?name ="+user+"&&id="+userID+"&&game=,"+gameName).openConnection();
+		URLConnection connection = new URL("http://25.194.87.222:80/update.php?name ="+user+"&&id="+userID+"&&game=,"+gameName).openConnection();
 		connection.setDoOutput(true);
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 		connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -105,13 +118,13 @@ public static void addUserToGame(String user, String userID, String gameName )
 	catch(Exception e)
 	{
 		System.out.println("Exception: "+ e.toString());
-		
+
 	}
 }
 public static void newAdmin(String name, String pass)
 {
 	try{
-		URLConnection connection = new URL("http://localhost:80/add.php?name="+name+"&&pass="+pass).openConnection();
+		URLConnection connection = new URL("http://25.194.87.222:80/add.php?name="+name+"&&pass="+pass).openConnection();
 		connection.setDoOutput(true);
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 		connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -119,13 +132,13 @@ public static void newAdmin(String name, String pass)
 	catch(Exception e)
 	{
 		System.out.println("Exception: "+ e.toString());
-		
+
 	}
 }
 public static String getUsersFromGame(String game, String id)
 {
 	try{
-		URLConnection connection = new URL("http://localhost:80/select.php?tbl=games&&col=userids&&whr=gameid="+id).openConnection();
+		URLConnection connection = new URL("http://25.194.87.222:80/select.php?tbl=games&&col=userids&&whr=gameid="+id).openConnection();
 		connection.setDoOutput(true);
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 		connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -150,7 +163,7 @@ public static String getGameFromAdmin(String name)
 {
 	try
 	{
-	URLConnection connection = new URL("http://localhost:80/select.php?tbl=admins&&col=games&&whr1=name&&whr2="+name).openConnection();
+	URLConnection connection = new URL("http://25.194.87.222:80/select.php?tbl=admins&&col=games&&whr1=name&&whr2="+name).openConnection();
 	connection.setDoOutput(true);
 	connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 	connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -158,17 +171,17 @@ public static String getGameFromAdmin(String name)
 	InputStreamReader resr = new InputStreamReader(inp);
 	BufferedReader br = new BufferedReader(resr);
 	String output = "";
-	
+
 	String holder1 = br.readLine();
 	String holder2 = "";
-	
+
 	while(!holder1.contains(")"))
 	{
-		
+
 		holder2+=holder1;
 		holder1=br.readLine();
 	}
-	
+
 	return holder2;
 	}
 	catch(Exception e)
@@ -181,14 +194,14 @@ public static void removeGame(String name, String id)
 {
 	try
 	{
-	URLConnection connection = new URL("https://localhost:80/remove.php?tbl=games&&col=gameid&&whr=gameid="+id).openConnection();
+	URLConnection connection = new URL("https://25.194.87.222:80/remove.php?tbl=games&&col=gameid&&whr=gameid="+id).openConnection();
 	connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 	connection.setRequestProperty("Accept-Charset", "UTF-8");
 	}
 	catch(Exception e)
 	{
 		System.out.println("Exception: "+ e.toString());
-		
+
 	}
 }
 public static void removeUser(String game, String gameid, String user)
@@ -199,16 +212,17 @@ public static void removeUser(String game, String gameid, String user)
 	{
 		users.replace(user, "");
 	}
-	URLConnection connection = new URL("https://localhost:80/update.php?tbl=games&&col=userids&&whr=gameid="+gameid+"&&replace=userids="+users).openConnection();
+	URLConnection connection = new URL("https://25.194.87.222:80/update.php?tbl=games&&col=userids&&whr=gameid="+gameid+"&&replace=userids="+users).openConnection();
 	}
 	catch(Exception e)
 	{
 		System.out.println("Exception: "+e.toString());
 	}
 }
+
+
 public static void main(String[] args) throws IOException
 {
-	//initConnect();
-	
+
 }
 }

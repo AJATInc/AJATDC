@@ -60,6 +60,7 @@ public class DeskClient {
             		char [] passwd = pass.getPassword();
             		String password =String.valueOf(passwd);
             		try{
+            			if(username!=""&&password!=""){
             		boolean ret = server.confirmCredentials(username,password);
             		
             		if(ret)
@@ -69,6 +70,7 @@ public class DeskClient {
             			home.createContentPane();
             			frame.setVisible(false);
             			home.createAndShowGUI();
+            		}
             		}
             		}
             		catch(IOException ioe)

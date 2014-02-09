@@ -113,11 +113,11 @@ class HomePanel implements  ActionListener{
                 {
                 	
                         
-                		DeskClient gamep = new DeskClient();
-                		//gamep.createContentPane();
-                		//homeFrame.setVisible(false);
-                          //  homeFrame.toBack();
-                		//gamep.createAndShowGUI();
+                		GamePage gamep = new GamePage();
+                		gamep.createContentPane();
+                		homeFrame.setVisible(false);
+                            homeFrame.toBack();
+                		gamep.createAndShowGUI();
                         
                         
                     
@@ -173,7 +173,41 @@ class HomePanel implements  ActionListener{
         homeFrame.setSize(1600, 1600);
         homeFrame.setVisible(true);
     }
+public static void repopulateGames()
+{
+	String gameList =  server.getGameFromAdmin(user);
+	JButton gameButton;
+	 int spliceIndex =gameList.indexOf("> ")+2;
+     gameList = gameList.substring(spliceIndex, gameList.length());
+     System.out.println(gameList);
+      String [] games =gameList.split(", ");
+      System.out.println(games.length);
+	for(int i = 0; i<games.length;i++)
+    {
+ 	    gameButton = new JButton(games[i]);
+ 	    gameButton.setLocation( 0, (i+1)*30+70);
+ 	    gameButton.setSize(1300,30);
+ 	    gameButton.addActionListener(new ActionListener(){
+       	public  void actionPerformed(ActionEvent e)
+           {
+           	
+                   
+           		GamePage gamep = new GamePage();
+           		gamep.createContentPane();
+           		homeFrame.setVisible(false);
+                       homeFrame.toBack();
+           		gamep.createAndShowGUI();
+                   
+                   
+               
+           }
+       }
+       );
+ 	    buttonPanel.add(gameButton);
+    }
 
+}
+     
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
