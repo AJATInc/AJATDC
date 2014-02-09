@@ -50,10 +50,10 @@ BufferedReader in;
 		}
 		return true;
 	}
-	public static int confirmCredentials(String uname, String pass) throws IOException
+	public static boolean confirmCredentials(String uname, String pass) throws IOException
 	{
-		URLConnection connection = new URL("http://localhost:80/post.php?cmd=login&&u="+uname+"&&p="+pass).openConnection();
-		connection.setDoOutput(true);
+		URLConnection connection = new URL("http://localhost:80/select.php?tbl=admins&&col=name&&whr1=name &&whr2="+pass).openConnection();
+		//connection.setDoOutput(true);
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 		connection.setRequestProperty("Accept-Charset", "UTF-8");
 		//connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
@@ -61,9 +61,22 @@ BufferedReader in;
 		InputStream inp = connection.getInputStream();
 		InputStreamReader resr = new InputStreamReader(inp);
 		BufferedReader br = new BufferedReader(resr);
-		System.out.println(br.readLine());
+		String holder1 = br.readLine();
+		String holder2 = "";
+		while(!holder1.contains(")"))
+		{
+			holder1=br.readLine();
+			holder2+=holder1;
 		
-		return 0;
+		}
+		
+		if(holder2.contains(uname))
+		{
+			
+			return true;
+		}
+		
+		return false;
 	}
 
 public static void newGame(String name, String pin,String adminID, int numP, int numT, boolean geoF, boolean miss, String mapURL,BufferedImage mapImg )
@@ -79,6 +92,8 @@ public static void newGame(String name, String pin,String adminID, int numP, int
 		System.out.println("Exception:" + e.toString());
 	}
 }
+
+
 public static void addUserToGame(String user, String userID, String gameName )
 {
 	try{
@@ -131,11 +146,11 @@ public static String getUsersFromGame(String game, String id)
 		return "Error";
 	}
 }
-public static String getGameFromAdmin(String name, String pass)
+public static String getGameFromAdmin(String name)
 {
 	try
 	{
-	URLConnection connection = new URL("http://localhost:80/select.php?tbl=admins&&col=name&&whr=name="+name).openConnection();
+	URLConnection connection = new URL("http://localhost:80/select.php?tbl=admins&&col=games&&whr1=name&&whr2="+name).openConnection();
 	connection.setDoOutput(true);
 	connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 	connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -143,12 +158,18 @@ public static String getGameFromAdmin(String name, String pass)
 	InputStreamReader resr = new InputStreamReader(inp);
 	BufferedReader br = new BufferedReader(resr);
 	String output = "";
-	String adder = "";
-	while((adder+=br.readLine())!=adder)
+	
+	String holder1 = br.readLine();
+	String holder2 = "";
+	
+	while(!holder1.contains(")"))
 	{
-		output+=adder;
+		
+		holder2+=holder1;
+		holder1=br.readLine();
 	}
-	return output;
+	
+	return holder2;
 	}
 	catch(Exception e)
 	{
